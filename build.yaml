@@ -1,0 +1,27 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          explicit_to_json: true
+          any_map: true
+          checked: false
+          create_factory: true
+          create_to_json: true
+          disallow_unrecognized_keys: false
+          field_rename: none
+          generic_argument_factories: true
+          ignore_unannotated: false
+          include_if_null: true
+
+      hive_generator:
+        generate_for:
+          - lib/features/**/data/models/*.dart
+          - lib/core/network/*.dart
+
+      source_gen:
+        options:
+          builders:
+            json_serializable:
+              options:
+                explicit_to_json: true

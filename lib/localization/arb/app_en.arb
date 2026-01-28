@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appTitle": "Property Tax System",
+  "properties": "Properties",
+  "ownership": "Ownership",
+  "valuation": "Valuation",
+  "taxation": "Taxation",
+  "reports": "Reports",
+  "login": "Login",
+  "logout": "Logout",
+  "addProperty": "Add Property",
+  "propertyId": "Property ID",
+  "address": "Address",
+  "ward": "Ward",
+  "zone": "Zone",
+  "search": "Search...",
+  "loading": "Loading...",
+  "error": "Error",
+  "retry": "Retry",
+  "noInternet": "No Internet Connection",
+  "offlineMode": "Offline Mode",
+  "syncData": "Sync Data"
+}
