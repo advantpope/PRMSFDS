@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:property_tax_system/features/ownership/data/models/ownership_model.dart';
+import 'package:property_tax_system_fd/features/ownership/data/models/ownership_model.dart';
 
 part 'property_model.g.dart';
 

@@ -28,13 +28,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await ref
-            .read(authProvider.notifier)
-            .login(
-              username: _usernameController.text.trim(),
-              password: _passwordController.text,
-            );
-
+        await ref.read(authProvider.notifier).login(
+          username: _usernameController.text.trim(),
+          password: _passwordController.text,
+        );
+        
         // Navigation is handled by auth state in app.dart
       } catch (e) {
         // Error is already handled in the provider
@@ -45,7 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-
+    
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -72,14 +70,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 10),
                   Text(
                     'Administration Portal',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 40),
-
+              
               // Login Form
               Form(
                 key: _formKey,
@@ -131,7 +129,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-
+                    
                     // Remember me and Forgot password
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,8 +152,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const ForgotPasswordScreen(),
+                                builder: (context) => const ForgotPasswordScreen(),
                               ),
                             );
                           },
@@ -164,17 +161,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
+                    
                     // Error message
                     if (authState.error != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: Text(
                           authState.error!,
-                          style: const TextStyle(color: Colors.red),
+                          style: const TextStyle(
+                            color: Colors.red,
+                          ),
                         ),
                       ),
-
+                    
                     // Login button
                     ElevatedButton(
                       onPressed: authState.isLoading ? null : _handleLogin,
@@ -188,9 +187,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ],
                 ),
               ),
-
+              
               const SizedBox(height: 32),
-
+              
               // Register section
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ],
               ),
-
+              
               // Demo credentials (remove in production)
               const SizedBox(height: 40),
               const Text(
