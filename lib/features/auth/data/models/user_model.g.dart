@@ -16,19 +16,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return UserModel(
-      id: fields[0] as int,
-      username: fields[1] as String,
-      email: fields[2] as String,
-      firstName: fields[3] as String,
-      lastName: fields[4] as String,
-      isStaff: fields[5] as bool,
-      isSuperuser: fields[6] as bool,
-      groups: fields[7] as List<String>,
-      userPermissions: fields[8] as List<String>,
-      lastLogin: fields[9] as DateTime,
-      dateJoined: fields[10] as DateTime,
-    );
+    return UserModel();
   }
 
   @override

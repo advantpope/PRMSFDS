@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:property_tax_system_fd/features/properties/data/models/property_model.dart';
 import 'package:property_tax_system_fd/features/properties/presentation/screens/property_detail_screen.dart';
 import 'package:property_tax_system_fd/shared/utils/formatters.dart';
-import 'package:property_tax_system_fd/features/properties/presentation/screens/property_detail_screen.dart';
 
 class PropertyCard extends ConsumerWidget {
   final PropertyModel property;
@@ -527,7 +526,7 @@ class PropertyCard extends ConsumerWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                _openInMaps();
+                _openInMaps(context);
               },
               child: const Text('Open in Maps'),
             ),
@@ -679,7 +678,7 @@ Shared from Property Tax System
     );
   }
 
-  void _openInMaps() {
+  void _openInMaps(BuildContext context) {
     // In a real app, you would use a maps plugin to open the location
     final mapsUrl =
         'https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}';

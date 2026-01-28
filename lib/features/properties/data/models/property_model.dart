@@ -1,13 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:property_tax_system/features/ownership/data/models/ownership_model.dart';
+import 'package:property_tax_system_fd/features/ownership/data/models/ownership_model.dart';
 
 part 'property_model.g.dart';
 
 @HiveType(typeId: 1)
 @JsonSerializable()
 class PropertyModel {
-
   PropertyModel({
     required this.id,
     required this.propertyId,
@@ -31,6 +30,9 @@ class PropertyModel {
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) =>
       _$PropertyModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PropertyModelToJson(this);
+
   @HiveField(0)
   @JsonKey(name: 'id')
   final int id;
@@ -102,6 +104,4 @@ class PropertyModel {
   @HiveField(17)
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
-
-  Map<String, dynamic> toJson() => _$PropertyModelToJson(this);
 }

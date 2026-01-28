@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:property_tax_system_fd/core/config/app_constants.dart';
 import 'package:property_tax_system_fd/features/properties/data/datasources/property_api.dart';
 import 'package:property_tax_system_fd/features/properties/data/models/property_model.dart';
+import 'package:property_tax_system_fd/features/properties/data/repositories/property_repository_impl.dart';
 import 'package:property_tax_system_fd/features/properties/domain/repositories/property_repository.dart';
 
 // Create PropertyRepository

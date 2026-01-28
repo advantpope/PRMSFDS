@@ -1,26 +1,52 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geocoding/geocoding.dart';
 
 class LocationService {
   static Future<Position> getCurrentPosition() async {
-    final status = await Permission.location.request();
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    if (status.isGranted) {
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-    } else {
-      throw Exception('Location permission denied');
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled');
     }
+
+    // Check permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception('Location permission denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception(
+        'Location permission permanently denied. Enable it from settings.',
+      );
+    }
+
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
   }
 
-  static Future<String> getAddressFromLatLng(double lat, double lng) async {
+  static Future<String> getAddressFromLatLng(
+    double latitude,
+    double longitude,
+  ) async {
     try {
-      final placemarks = await Geolocator.placemarkFromCoordinates(lat, lng);
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
+
       if (placemarks.isNotEmpty) {
-        final placemark = placemarks.first;
-        return '${placemark.street}, ${placemark.locality}, ${placemark.country}';
+        final place = placemarks.first;
+        return '${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
       }
+
       return 'Unknown location';
     } catch (e) {
       return 'Unable to fetch address';
