@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:property_tax_system_fd/core/config/routes.dart';
 import 'package:property_tax_system_fd/localization/app_localizations.dart';
 import 'package:property_tax_system_fd/shared/theme/app_theme.dart';
 import 'package:property_tax_system_fd/features/auth/presentation/screens/login_screen.dart';
@@ -23,7 +24,7 @@ class MyApp extends ConsumerWidget {
       navigatorKey: navigatorKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
+      themeMode: ref.watch(themeModeProvider),
       debugShowCheckedModeBanner: AppConfig.isDebug,
       locale: const Locale('en'),
       localizationsDelegates: const [
@@ -33,29 +34,19 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: _buildHomeScreen(authState),
-      routes: _buildRoutes(authState),
+      home: _buildHome(authState),
+      routes: AppRoutes.routes,
     );
   }
 
-  Widget _buildHomeScreen(AuthState authState) {
+  Widget _buildHome(AuthState authState) {
     if (authState.isLoading) {
       return const SplashScreen();
     }
-
     if (authState.isAuthenticated) {
       return const MainNavigationScreen();
     }
-
     return const LoginScreen();
-  }
-
-  Map<String, WidgetBuilder> _buildRoutes(AuthState authState) {
-    return {
-      '/login': (context) => const LoginScreen(),
-      '/properties': (context) => const PropertyListScreen(),
-      // Add other routes here
-    };
   }
 }
 
@@ -66,6 +57,7 @@ class MainNavigationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final user = authState.user;
+    final themeMode = ref.watch(themeToggleProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -97,10 +89,10 @@ class MainNavigationScreen extends ConsumerWidget {
                           : Icons.dark_mode,
                     ),
                     onPressed: () {
-                      ref.read(themeToggleProvider);
+                      ref.read(themeToggleProvider.notifier).toggle();
                     },
                   ),
-                  if (authState.value != null)
+                  if (authState.isAuthenticated)
                     PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'logout') {
@@ -143,27 +135,29 @@ class MainNavigationScreen extends ConsumerWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.home),
+            leading: const Icon(Icons.dashboard),
             title: const Text('Dashboard'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, AppRoutes.reports);
             },
           ),
-          const Divider(),
+
           ListTile(
             leading: const Icon(Icons.apartment),
             title: const Text('Properties'),
             onTap: () {
-              Navigator.pushNamed(context, '/properties');
+              Navigator.pushReplacementNamed(context, AppRoutes.properties);
             },
           ),
+
           ListTile(
             leading: const Icon(Icons.swap_horiz),
             title: const Text('Ownership'),
             onTap: () {
-              Navigator.pushNamed(context, '/ownership');
+              Navigator.pushReplacementNamed(context, AppRoutes.ownership);
             },
           ),
+
           ListTile(
             leading: const Icon(Icons.assessment),
             title: const Text('Valuation'),
@@ -171,13 +165,15 @@ class MainNavigationScreen extends ConsumerWidget {
               Navigator.pushNamed(context, '/valuation');
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.receipt),
-            title: const Text('Taxation'),
-            onTap: () {
-              Navigator.pushNamed(context, '/taxation');
-            },
-          ),
+          if (authState.isAdmin)
+            ListTile(
+              leading: const Icon(Icons.receipt),
+              title: const Text('Taxation'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, AppRoutes.taxation);
+              },
+            ),
+
           ListTile(
             leading: const Icon(Icons.dashboard),
             title: const Text('Reports'),

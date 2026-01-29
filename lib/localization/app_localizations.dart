@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../app.dart';
 
 class AppLocalizations {
-
   AppLocalizations(this.locale);
   static const List<Locale> supportedLocales = [
     Locale('en', ''),
@@ -20,13 +18,13 @@ class AppLocalizations {
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
-  _AppLocalizationsDelegate();
+      _AppLocalizationsDelegate();
 
   Map<String, String>? _localizedStrings;
 
   Future<bool> load() async {
     final json = await DefaultAssetBundle.of(
-        navigatorKey.currentContext!
+      navigatorKey.currentContext!,
     ).loadString('lib/localization/arb/app_${locale.languageCode}.arb');
 
     _localizedStrings = Map<String, String>.from(jsonDecode(json));
@@ -44,8 +42,9 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return AppLocalizations.supportedLocales
-        .any((l) => l.languageCode == locale.languageCode);
+    return AppLocalizations.supportedLocales.any(
+      (l) => l.languageCode == locale.languageCode,
+    );
   }
 
   @override

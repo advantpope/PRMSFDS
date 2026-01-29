@@ -1,38 +1,101 @@
-import 'package:property_tax_system_fd/features/properties/domain/entities/property.dart';
+import 'package:hive/hive.dart';
+import 'package:property_tax_system_fd/features/properties/data/datasources/property_api.dart';
+import 'package:property_tax_system_fd/features/properties/data/models/property_model.dart';
 import 'package:property_tax_system_fd/features/properties/domain/repositories/property_repository.dart';
-import 'package:property_tax_system_fd/features/properties/data/datasources/property_local_data_source.dart';
-import 'package:property_tax_system_fd/features/properties/data/datasources/property_remote_data_source.dart';
 
 class PropertyRepositoryImpl implements PropertyRepository {
-  final PropertyRemoteDataSource remoteDataSource;
-  final PropertyLocalDataSource localDataSource;
-
   PropertyRepositoryImpl({
-    required this.remoteDataSource,
-    required this.localDataSource,
-  });
+    required PropertyApi propertyApi,
+    Box<PropertyModel>? propertyBox,
+  }) : _propertyApi = propertyApi,
+       _propertyBox = propertyBox;
+  final PropertyApi _propertyApi;
+  final Box<PropertyModel>? _propertyBox;
 
   @override
-  Future<List<Property>> getProperties() async {
-    // Try remote first, then local if remote fails
+  Future<List<PropertyModel>> getProperties() async {
     try {
-      final remoteProperties = await remoteDataSource.getProperties();
-      // Save to local
-      await localDataSource.saveProperties(remoteProperties);
-      return remoteProperties;
+      final response = await _propertyApi.getProperties();
+      final properties = response.results;
+
+      // Cache to Hive if available
+      if (_propertyBox != null) {
+        await _propertyBox.clear();
+        for (final property in properties) {
+          await _propertyBox.put(property.id, property);
+        }
+      }
+
+      return properties;
     } catch (e) {
-      // If remote fails, get from local
-      return localDataSource.getProperties();
+      // Fallback to cached data
+      if (_propertyBox != null && _propertyBox.isNotEmpty) {
+        return _propertyBox.values.toList();
+      }
+      rethrow;
     }
   }
 
   @override
-  Future<Property> addProperty(Property property) async {
-    // Add to remote and then to local
-    final addedProperty = await remoteDataSource.addProperty(property);
-    await localDataSource.addProperty(addedProperty);
-    return addedProperty;
+  Future<PropertyModel> getPropertyById(String id) async {
+    try {
+      final property = await _propertyApi.getPropertyDetail(int.parse(id));
+
+      // Cache to Hive
+      if (_propertyBox != null) {
+        await _propertyBox.put(property.id, property);
+      }
+
+      return property;
+    } catch (e) {
+      // Try to get from cache
+      if (_propertyBox != null) {
+        final property = _propertyBox.get(int.parse(id));
+        if (property != null) return property;
+      }
+      rethrow;
+    }
   }
 
-  // ... other methods
+  @override
+  Future<PropertyModel> addProperty(PropertyModel property) async {
+    final createdProperty = await _propertyApi.createProperty(property);
+
+    // Cache to Hive
+    if (_propertyBox != null) {
+      await _propertyBox.put(createdProperty.id, createdProperty);
+    }
+
+    return createdProperty;
+  }
+
+  @override
+  Future<PropertyModel> updateProperty(PropertyModel property) async {
+    final updatedProperty = await _propertyApi.updateProperty(
+      property.id,
+      property,
+    );
+
+    // Update cache
+    if (_propertyBox != null) {
+      await _propertyBox.put(updatedProperty.id, updatedProperty);
+    }
+
+    return updatedProperty;
+  }
+
+  @override
+  Future<void> deleteProperty(String id) async {
+    await _propertyApi.deleteProperty(int.parse(id));
+
+    // Remove from cache
+    if (_propertyBox != null) {
+      await _propertyBox.delete(int.parse(id));
+    }
+  }
+
+  @override
+  Future<List<PropertyModel>> searchProperties(String query) async {
+    return await _propertyApi.searchProperties(query);
+  }
 }

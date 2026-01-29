@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PropertyMapPreview extends StatelessWidget {
-  final double latitude;
-  final double longitude;
-  final String address;
-  final double height;
-
   const PropertyMapPreview({
     super.key,
     required this.latitude,
@@ -14,6 +8,10 @@ class PropertyMapPreview extends StatelessWidget {
     required this.address,
     this.height = 200,
   });
+  final double latitude;
+  final double longitude;
+  final String address;
+  final double height;
 
   @override
   Widget build(BuildContext context) {

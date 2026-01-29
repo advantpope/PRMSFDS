@@ -419,11 +419,7 @@ class PropertyCard extends ConsumerWidget {
               ListTile(
                 leading: const Icon(Icons.calendar_today, color: Colors.blue),
                 title: const Text('Last Valuation'),
-                subtitle: Text(
-                  property.updatedAt != null
-                      ? Formatters.formatDate(property.updatedAt!)
-                      : 'N/A',
-                ),
+                subtitle: Text(Formatters.formatDate(property.updatedAt!)),
               ),
               ListTile(
                 leading: const Icon(Icons.apartment, color: Colors.blue),

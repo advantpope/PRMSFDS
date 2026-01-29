@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -112,4 +113,48 @@ class StorageService {
   Future<String> getLanguage() async {
     return await getAppSetting('language', defaultValue: 'en');
   }
+
+  Future<String> getReportFilePath(String fileName) async {
+    if (kIsWeb) {
+      return fileName; // Web handles downloads differently
+    }
+
+    final directory = await getApplicationDocumentsDirectory();
+    final reportDir = Directory('${directory.path}/report_files');
+
+    if (!await reportDir.exists()) {
+      await reportDir.create(recursive: true);
+    }
+
+    return '${reportDir.path}/$fileName';
+  }
+
+  Future<List<FileSystemEntity>> getDownloadedReports() async {
+    if (kIsWeb) return []; // Not applicable for web
+
+    final directory = await getApplicationDocumentsDirectory();
+    final reportDir = Directory('${directory.path}/report_files');
+
+    if (!await reportDir.exists()) {
+      return [];
+    }
+
+    return reportDir.listSync();
+  }
+
+  // Save a JSON-like object in Hive
+  Future<void> saveObject(String key, Map<String, dynamic> data) async {
+    final box = await _openBox('cached_data');
+    await box.put(key, data);
+  }
+
+  // Retrieve a JSON-like object from Hive
+  Future<Map<String, dynamic>?> getObject(String key) async {
+    final box = await _openBox('cached_data');
+    final data = box.get(key);
+    if (data == null) return null;
+    return Map<String, dynamic>.from(data);
+  }
+
+  // Add these methods to the existing StorageService class
 }

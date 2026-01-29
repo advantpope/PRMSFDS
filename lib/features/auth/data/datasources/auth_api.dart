@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:property_tax_system_fd/core/network/api_client.dart';
 import 'package:property_tax_system_fd/core/config/api_endpoints.dart';
 import 'package:property_tax_system_fd/features/auth/data/models/auth_response.dart';
-import 'package:property_tax_system_fd/features/auth/data/models/login_request.dart';
+import 'package:property_tax_system_fd/features/auth/data/models/login_request.dart'
+    hide RegisterRequest;
 import 'package:property_tax_system_fd/features/auth/data/models/register_request.dart';
 import 'package:property_tax_system_fd/features/auth/data/models/user_model.dart';
 

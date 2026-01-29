@@ -1,0 +1,23 @@
+{
+  "@@locale": "sw",
+  "appTitle": "Mfumo wa Kodi ya Mali",
+  "properties": "Mali",
+  "ownership": "Umiliki",
+  "valuation": "Tathmini",
+  "taxation": "Utozaji wa Kodi",
+  "reports": "Ripoti",
+  "login": "Ingia",
+  "logout": "Toka",
+  "addProperty": "Ongeza Mali",
+  "propertyId": "Nambari ya Mali",
+  "address": "Anwani",
+  "ward": "Kata",
+  "zone": "Eneo",
+  "search": "Tafuta...",
+  "loading": "Inapakia...",
+  "error": "Hitilafu",
+  "retry": "Jaribu tena",
+  "noInternet": "Hakuna Mtandao",
+  "offlineMode": "Hali ya Nje ya Mtandao",
+  "syncData": "Sawazisha Data"
+}

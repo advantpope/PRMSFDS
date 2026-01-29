@@ -27,6 +27,47 @@ class PropertyModel {
     required this.createdAt,
     required this.updatedAt,
   });
+  PropertyModel copyWith({
+    int? id,
+    String? propertyId,
+    String? address,
+    String? ward,
+    String? zone,
+    double? latitude,
+    double? longitude,
+    double? areaSqft,
+    String? propertyType,
+    String? constructionType,
+    int? yearBuilt,
+    bool? isActive,
+    OwnershipModel? currentOwner,
+    double? currentValuation,
+    double? annualTax,
+    List<String>? images,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return PropertyModel(
+      id: id ?? this.id,
+      propertyId: propertyId ?? this.propertyId,
+      address: address ?? this.address,
+      ward: ward ?? this.ward,
+      zone: zone ?? this.zone,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      areaSqft: areaSqft ?? this.areaSqft,
+      propertyType: propertyType ?? this.propertyType,
+      constructionType: constructionType ?? this.constructionType,
+      yearBuilt: yearBuilt ?? this.yearBuilt,
+      isActive: isActive ?? this.isActive,
+      currentOwner: currentOwner ?? this.currentOwner,
+      currentValuation: currentValuation ?? this.currentValuation,
+      annualTax: annualTax ?? this.annualTax,
+      images: images ?? this.images,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) =>
       _$PropertyModelFromJson(json);
@@ -35,73 +76,73 @@ class PropertyModel {
 
   @HiveField(0)
   @JsonKey(name: 'id')
-  final int id;
+  late final int id;
 
   @HiveField(1)
   @JsonKey(name: 'property_id')
-  final String propertyId;
+  late final String propertyId;
 
   @HiveField(2)
   @JsonKey(name: 'address')
-  final String address;
+  late final String address;
 
   @HiveField(3)
   @JsonKey(name: 'ward')
-  final String ward;
+  late final String ward;
 
   @HiveField(4)
   @JsonKey(name: 'zone')
-  final String zone;
+  late final String zone;
 
   @HiveField(5)
   @JsonKey(name: 'latitude')
-  final double latitude;
+  late final double latitude;
 
   @HiveField(6)
   @JsonKey(name: 'longitude')
-  final double longitude;
+  late final double longitude;
 
   @HiveField(7)
   @JsonKey(name: 'area_sqft')
-  final double areaSqft;
+  late final double areaSqft;
 
   @HiveField(8)
   @JsonKey(name: 'property_type')
-  final String propertyType; // RESIDENTIAL, COMMERCIAL, INDUSTRIAL
+  late final String propertyType; // RESIDENTIAL, COMMERCIAL, INDUSTRIAL
 
   @HiveField(9)
   @JsonKey(name: 'construction_type')
-  final String constructionType; // RCC, FRAMED, LOAD_BEARING
+  late final String constructionType; // RCC, FRAMED, LOAD_BEARING
 
   @HiveField(10)
   @JsonKey(name: 'year_built')
-  final int yearBuilt;
+  late final int yearBuilt;
 
   @HiveField(11)
   @JsonKey(name: 'is_active')
-  final bool isActive;
+  late final bool isActive;
 
   @HiveField(12)
   @JsonKey(name: 'current_owner')
-  final OwnershipModel? currentOwner;
+  late final OwnershipModel? currentOwner;
 
   @HiveField(13)
   @JsonKey(name: 'current_valuation')
-  final double? currentValuation;
+  late final double? currentValuation;
 
   @HiveField(14)
   @JsonKey(name: 'annual_tax')
-  final double? annualTax;
+  late final double? annualTax;
 
   @HiveField(15)
   @JsonKey(name: 'images')
-  final List<String> images;
+  late final List<String> images;
 
   @HiveField(16)
   @JsonKey(name: 'created_at')
-  final DateTime createdAt;
+  late final DateTime createdAt;
 
   @HiveField(17)
   @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
+  late final DateTime updatedAt;
 }

@@ -16,7 +16,26 @@ class PropertyModelAdapter extends TypeAdapter<PropertyModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PropertyModel();
+    return PropertyModel(
+      id: fields[0] as int,
+      propertyId: fields[1] as String,
+      address: fields[2] as String,
+      ward: fields[3] as String,
+      zone: fields[4] as String,
+      latitude: fields[5] as double,
+      longitude: fields[6] as double,
+      areaSqft: fields[7] as double,
+      propertyType: fields[8] as String,
+      constructionType: fields[9] as String,
+      yearBuilt: fields[10] as int,
+      isActive: fields[11] as bool,
+      currentOwner: fields[12] as OwnershipModel,
+      currentValuation: fields[13] as double,
+      annualTax: fields[14] as double,
+      images: fields[15] as List<String>,
+      createdAt: fields[16] as DateTime,
+      updatedAt: fields[17] as DateTime,
+    );
   }
 
   @override

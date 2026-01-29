@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:property_tax_system_fd/shared/theme/app_theme.dart';
 
 class ThemeAwareCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final double? elevation;
-  final BorderRadius? borderRadius;
-  final Color? color;
-  final bool withShadow;
-
   const ThemeAwareCard({
     super.key,
     required this.child,
@@ -20,6 +12,13 @@ class ThemeAwareCard extends StatelessWidget {
     this.color,
     this.withShadow = true,
   });
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final double? elevation;
+  final BorderRadius? borderRadius;
+  final Color? color;
+  final bool withShadow;
 
   @override
   Widget build(BuildContext context) {

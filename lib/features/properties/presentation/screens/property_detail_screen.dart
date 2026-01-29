@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ErrorWidget;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:property_tax_system_fd/features/properties/presentation/providers/property_provider.dart';
@@ -14,14 +14,13 @@ import 'package:property_tax_system_fd/shared/widgets/image_viewer.dart';
 import 'package:property_tax_system_fd/shared/widgets/property_map_preview.dart';
 
 class PropertyDetailScreen extends ConsumerStatefulWidget {
-  final String propertyId;
-  final PropertyModel? initialProperty;
-
   const PropertyDetailScreen({
     super.key,
     required this.propertyId,
     this.initialProperty,
   });
+  final String propertyId;
+  final PropertyModel? initialProperty;
 
   @override
   ConsumerState<PropertyDetailScreen> createState() =>
@@ -134,8 +133,9 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => OwnershipTransferScreen(
-            propertyId: _property!.id.toString(),
+            propertyId: _property!.id,
             propertyName: _property!.propertyId,
+            currentOwnerName: _property!.currentOwner,
           ),
         ),
       ).then((value) {
@@ -292,11 +292,8 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
     }
 
     if (_property == null) {
-      return Scaffold(
-        appBar: const CustomAppBar(
-          title: 'Property Details',
-          showBackButton: true,
-        ),
+      return const Scaffold(
+        appBar: CustomAppBar(title: 'Property Details', showBackButton: true),
         body: ErrorWidget(message: 'Property not found', showRetry: true),
       );
     }
@@ -350,10 +347,10 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                   title: Text('Tax Details'),
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'toggle_status',
                 child: ListTile(
-                  leading: Icon(Icons.power_settings_new),
+                  leading: const Icon(Icons.power_settings_new),
                   title: Text(_property!.isActive ? 'Deactivate' : 'Activate'),
                 ),
               ),
@@ -474,7 +471,13 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                 backgroundColor: _property!.isActive
                     ? Colors.green.withOpacity(0.2)
                     : Colors.orange.withOpacity(0.2),
-                labelColor: _property!.isActive ? Colors.green : Colors.orange,
+                // labelColor: _property!.isActive ? Colors.green : Colors.orange,
+
+                // labelStyle: TextStyle(
+                //   color: _property!.isActive
+                //       ? Colors.white
+                //       : Colors.black, // Conditional color
+                // ),
               ),
             ],
           ),
@@ -762,7 +765,6 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                       Chip(
                         label: const Text('CURRENT YEAR'),
                         backgroundColor: Colors.blue.withOpacity(0.2),
-                        labelColor: Colors.blue,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -942,7 +944,7 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                     trailing: Chip(
                       label: const Text('CURRENT'),
                       backgroundColor: Colors.green.withOpacity(0.2),
-                      labelColor: Colors.green,
+                      // labelColor: Colors.green,
                     ),
                   ),
                   const SizedBox(height: 8),

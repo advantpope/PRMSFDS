@@ -19,7 +19,7 @@ class OwnershipModelAdapter extends TypeAdapter<OwnershipModel> {
     return OwnershipModel(
       id: fields[0] as int,
       ownerName: fields[1] as String,
-      ownerPhone: fields[2] as String,
+      ownerPhone: fields[5] as String,
     );
   }
 

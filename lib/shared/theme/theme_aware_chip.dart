@@ -58,7 +58,6 @@ class ThemeAwareChip extends StatelessWidget {
         textColor = context.taxDueColor;
         break;
       case ChipType.neutral:
-      default:
         chipColor = context.colorScheme.surfaceVariant;
         textColor = context.colorScheme.onSurfaceVariant;
         break;

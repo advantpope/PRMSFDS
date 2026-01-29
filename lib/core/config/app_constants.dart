@@ -14,4 +14,7 @@ class AppConstants {
 
   // File paths
   static const String propertyImagesPath = 'property_images/';
+
+  static const String reportsBox = 'reports';
+  static const String reportFilesPath = 'report_files/';
 }

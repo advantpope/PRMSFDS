@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:property_tax_system_fd/features/auth/data/datasources/auth_api.dart';
-import 'package:property_tax_system_fd/features/auth/data/models/auth_response.dart';
-import 'package:property_tax_system_fd/features/auth/data/models/login_request.dart';
 import 'package:property_tax_system_fd/features/auth/data/models/register_request.dart';
 import 'package:property_tax_system_fd/features/auth/data/models/user_model.dart';
 import 'package:property_tax_system_fd/features/auth/data/repositories/auth_repository_impl.dart';
@@ -32,20 +30,31 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
 // Auth State
 class AuthState {
   final UserModel? user;
+  final bool isAuthenticated;
   final bool isLoading;
   final String? error;
 
-  const AuthState({this.user, this.isLoading = false, this.error});
+  const AuthState({
+    this.user,
+    this.isAuthenticated = false,
+    this.isLoading = false,
+    this.error,
+  });
 
-  AuthState copyWith({UserModel? user, bool? isLoading, String? error}) {
+  AuthState copyWith({
+    UserModel? user,
+    bool? isAuthenticated,
+    bool? isLoading,
+    String? error,
+  }) {
     return AuthState(
       user: user ?? this.user,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       isLoading: isLoading ?? this.isLoading,
-      error: error,
+      error: error ?? this.error,
     );
   }
 
-  bool get isAuthenticated => user != null;
   bool get isAdmin => user?.isAdmin ?? false;
 }
 
@@ -76,20 +85,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> login({
-    required String username,
-    required String password,
-  }) async {
+  Future<void> login(String email, String password, String userType) async {
+    state = state.copyWith(isLoading: true, error: null);
+
     try {
-      state = state.copyWith(isLoading: true, error: null);
+      await Future.delayed(const Duration(seconds: 2));
 
-      final request = LoginRequest(username: username, password: password);
-
-      final response = await _authRepository.login(request);
-      state = state.copyWith(user: response.user, isLoading: false);
+      if (email == 'admin@gov.com' &&
+          password == 'password' &&
+          userType == 'admin') {
+        state = state.copyWith(isAuthenticated: true, isLoading: false);
+      } else {
+        throw Exception('Invalid credentials');
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
-      rethrow;
     }
   }
 

@@ -12,6 +12,9 @@
 .swiftpm/
 migrate_working_dir/
 
+# Ignore JSON serialization generated files
+*.g.dart
+
 # IntelliJ related
 *.iml
 *.ipr

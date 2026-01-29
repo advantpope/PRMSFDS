@@ -21,9 +21,23 @@ final brightnessProvider = Provider<Brightness>((ref) {
 });
 
 // Theme toggle provider
-final themeToggleProvider = Provider<void>((ref) {
-  final currentMode = ref.read(themeModeProvider);
-  ref.read(themeModeProvider.notifier).state = currentMode == ThemeMode.light
-      ? ThemeMode.dark
-      : ThemeMode.light;
+// final themeToggleProvider = Provider<void>((ref) {
+//   final currentMode = ref.read(themeModeProvider);
+//   ref.read(themeModeProvider.notifier).state = currentMode == ThemeMode.light
+//       ? ThemeMode.dark
+//       : ThemeMode.light;
+// });
+
+final themeToggleProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((
+  ref,
+) {
+  return ThemeNotifier();
 });
+
+class ThemeNotifier extends StateNotifier<ThemeMode> {
+  ThemeNotifier() : super(ThemeMode.light);
+
+  void toggle() {
+    state = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  }
+}
