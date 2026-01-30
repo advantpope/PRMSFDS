@@ -17,7 +17,7 @@ ReportModel _$ReportModelFromJson(Map json) => ReportModel(
       : DateRange.fromJson(
           Map<String, dynamic>.from(json['date_range'] as Map),
         ),
-  parameters: Map<String, dynamic>.from(json['parameters'] as Map),
+  parameters: Map<String, String>.from(json['parameters'] as Map),
   fileUrl: json['file_url'] as String?,
   fileSize: (json['file_size'] as num?)?.toInt(),
   createdAt: DateTime.parse(json['created_at'] as String),
@@ -84,12 +84,9 @@ ReportData _$ReportDataFromJson(Map json) => ReportData(
   totalProperties: (json['total_properties'] as num).toInt(),
   totalTaxCollected: (json['total_tax_collected'] as num).toDouble(),
   totalTaxDue: (json['total_tax_due'] as num).toDouble(),
-  wardDistribution: (json['ward_distribution'] as Map).map(
-    (k, e) => MapEntry(
-      k as String,
-      WardData.fromJson(Map<String, dynamic>.from(e as Map)),
-    ),
-  ),
+  wardDistribution: (json['ward_distribution'] as List<dynamic>)
+      .map((e) => WardData.fromJson(Map<String, dynamic>.from(e as Map)))
+      .toList(),
   propertyTypeDistribution: Map<String, int>.from(
     json['property_type_distribution'] as Map,
   ),
@@ -103,9 +100,9 @@ Map<String, dynamic> _$ReportDataToJson(ReportData instance) =>
       'total_properties': instance.totalProperties,
       'total_tax_collected': instance.totalTaxCollected,
       'total_tax_due': instance.totalTaxDue,
-      'ward_distribution': instance.wardDistribution.map(
-        (k, e) => MapEntry(k, e.toJson()),
-      ),
+      'ward_distribution': instance.wardDistribution
+          .map((e) => e.toJson())
+          .toList(),
       'property_type_distribution': instance.propertyTypeDistribution,
       'top_properties': instance.topProperties.map((e) => e.toJson()).toList(),
     };

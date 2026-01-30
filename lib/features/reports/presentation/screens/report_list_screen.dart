@@ -166,6 +166,7 @@ class _ReportListScreenState extends ConsumerState<ReportListScreen> {
     if (reportState.hasError && reportState.reports.isEmpty) {
       return ErrorWidget(
         message: reportState.error!,
+
         showRetry: true,
         onRetry: () {
           ref.read(reportProvider.notifier).refreshReports();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:property_tax_system_fd/features/auth/presentation/providers/auth_provider.dart';
 import 'package:property_tax_system_fd/shared/widgets/custom_app_bar.dart';
+import 'package:property_tax_system_fd/shared/utils/form_validators.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -26,9 +27,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isSubmitting = true);
       try {
-        await ref
-            .read(authProvider.notifier)
-            .resetPassword(_emailController.text.trim());
+        await ref.read(authProvider.notifier);
+        // .resetPassword(_emailController.text.trim());
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -79,27 +79,23 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 40),
+
+            // Email Form
             Form(
               key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.email),
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.grey[50],
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
+                    validator: FormValidators.email,
                   ),
                   const SizedBox(height: 24),
                   SizedBox(

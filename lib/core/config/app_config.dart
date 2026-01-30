@@ -1,34 +1,16 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
 class AppConfig {
+  // Private constants
+  static const String _apiBaseUrl = 'http://localhost:8000/api';
+  static const String _googleMapsApiKey = 'YOUR_API_KEY_HERE';
+  static const String _sentryDsn = '';
+  static const String _appVersion = '1.0.0';
 
-  factory AppConfig() => _instance;
-
-  AppConfig._internal();
-  static final AppConfig _instance = AppConfig._internal();
-
-  static String get apiBaseUrl {
-    return dotenv.get('API_BASE_URL',
-        fallback: 'http://localhost:8000/api');
-  }
-
-  static String get googleMapsApiKey {
-    return dotenv.get('GOOGLE_MAPS_API_KEY',
-        fallback: 'YOUR_API_KEY_HERE');
-  }
-
-  static String get sentryDsn {
-    return dotenv.get('SENTRY_DSN',
-        fallback: '');
-  }
-
-  static bool get isDebug {
-    return dotenv.get('ENVIRONMENT',
-        fallback: 'development') == 'development';
-  }
-
-  static String get appVersion {
-    return dotenv.get('APP_VERSION',
-        fallback: '1.0.0');
-  }
+  // Public getters
+  static String get apiBaseUrl => _apiBaseUrl;
+  static String get googleMapsApiKey => _googleMapsApiKey;
+  static String get sentryDsn => _sentryDsn;
+  static bool get isDebug => kDebugMode;
+  static String get appVersion => _appVersion;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:property_tax_system_fd/features/auth/presentation/widgets/password_strength_indicator.dart';
 import 'package:property_tax_system_fd/shared/utils/form_validators.dart';
 
 enum AuthMode { login, register }
@@ -177,6 +178,15 @@ class _AuthFormState extends State<AuthForm> {
             ),
             const SizedBox(height: 16),
           ],
+
+          if (widget.mode == AuthMode.register &&
+              _passwordController.text.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: PasswordStrengthIndicator(
+                password: _passwordController.text,
+              ),
+            ),
 
           // Remember Me & Forgot Password (Login only)
           if (widget.mode == AuthMode.login) ...[

@@ -7,6 +7,7 @@ import 'package:property_tax_system_fd/features/reports/data/datasources/report_
 import 'package:property_tax_system_fd/features/reports/data/models/report_model.dart';
 import 'package:property_tax_system_fd/features/reports/data/repositories/report_repository_impl.dart';
 import 'package:property_tax_system_fd/features/reports/domain/repositories/report_repository.dart';
+import 'package:property_tax_system_fd/shared/services/storage_service.dart';
 
 // Providers
 final reportApiProvider = Provider<ReportApi>((ref) {
@@ -15,6 +16,10 @@ final reportApiProvider = Provider<ReportApi>((ref) {
 
 final reportBoxProvider = Provider<Box<ReportModel>>((ref) {
   return Hive.box<ReportModel>(AppConstants.reportsBox);
+});
+
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageService();
 });
 
 final reportRepositoryProvider = Provider<ReportRepository>((ref) {

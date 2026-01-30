@@ -28,9 +28,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders += [
-            googleMapsApiKey: project.properties['AIzaSyCy0eIgYfFtoRD64q-RUrcmZu_YKwMOw5c'] ?: ""
-        ]
     }
 
     buildTypes {

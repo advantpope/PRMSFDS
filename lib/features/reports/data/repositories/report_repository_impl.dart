@@ -221,7 +221,7 @@ extension ReportModelCopyWith on ReportModel {
     ReportFormat? format,
     ReportStatus? status,
     DateRange? dateRange,
-    Map<String, dynamic>? parameters,
+    Map<String, String>? parameters,
     String? fileUrl,
     int? fileSize,
     DateTime? createdAt,

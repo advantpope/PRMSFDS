@@ -6,6 +6,8 @@ part 'tax_model.g.dart';
 @HiveType(typeId: 4)
 @JsonSerializable()
 class TaxModel {
+  factory TaxModel.fromJson(Map<String, dynamic> json) =>
+      _$TaxModelFromJson(json);
   @HiveField(0)
   @JsonKey(name: 'id')
   final int id;
@@ -63,9 +65,6 @@ class TaxModel {
     this.paymentMethod,
     this.receiptNumber,
   });
-
-  factory TaxModel.fromJson(Map<String, dynamic> json) =>
-      _$TaxModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$TaxModelToJson(this);
 

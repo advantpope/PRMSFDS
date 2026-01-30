@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:property_tax_system_fd/features/reports/data/models/report_model.dart';
-import 'package:property_tax_system_fd/shared/utils/formatters.dart';
 
 class ReportCard extends StatelessWidget {
-  final ReportModel report;
-  final VoidCallback? onDownload;
-  final VoidCallback? onDelete;
-  final VoidCallback? onClone;
-  final VoidCallback? onTap;
-
   const ReportCard({
     super.key,
     required this.report,
@@ -18,6 +11,11 @@ class ReportCard extends StatelessWidget {
     this.onClone,
     this.onTap,
   });
+  final ReportModel report;
+  final VoidCallback? onDownload;
+  final VoidCallback? onDelete;
+  final VoidCallback? onClone;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -75,23 +75,23 @@ class DashboardScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Welcome back, ${user?.firstName ?? 'User'}!',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            user?.isAdmin ?? false
-                                ? 'Administrator Dashboard'
-                                : 'Staff Dashboard',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
+                          // Text(
+                          //   'Welcome back, ${user?.firstName ?? 'User'}!',
+                          //   style: const TextStyle(
+                          //     fontSize: 20,
+                          //     fontWeight: FontWeight.bold,
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 4),
+                          // Text(
+                          //   user?.isAdmin ?? false
+                          //       ? 'Administrator Dashboard'
+                          //       : 'Staff Dashboard',
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     color: Colors.grey[600],
+                          //   ),
+                          // ),
                           const SizedBox(height: 8),
                           Text(
                             'Today: ${Formatters.formatDate(DateTime.now())}',

@@ -37,16 +37,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isSubmitting = true);
       try {
-        await ref
-            .read(authProvider.notifier)
-            .register(
-              username: _usernameController.text.trim(),
-              email: _emailController.text.trim(),
-              password: _passwordController.text,
-              confirmPassword: _confirmPasswordController.text,
-              firstName: _firstNameController.text.trim(),
-              lastName: _lastNameController.text.trim(),
-            );
+        await ref.read(authProvider.notifier);
+        // .register(
+        //   username: _usernameController.text.trim(),
+        //   email: _emailController.text.trim(),
+        //   password: _passwordController.text,
+        //   confirmPassword: _confirmPasswordController.text,
+        //   firstName: _firstNameController.text.trim(),
+        //   lastName: _lastNameController.text.trim(),
+        // );
         // Navigation will be handled by auth state
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

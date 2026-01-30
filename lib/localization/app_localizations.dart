@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import '../app.dart';
-
 class AppLocalizations {
   AppLocalizations(this.locale);
+
   static const List<Locale> supportedLocales = [
     Locale('en', ''),
     Locale('sw', ''),
@@ -13,8 +12,8 @@ class AppLocalizations {
 
   final Locale locale;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -23,16 +22,20 @@ class AppLocalizations {
   Map<String, String>? _localizedStrings;
 
   Future<bool> load() async {
-    final json = await DefaultAssetBundle.of(
-      navigatorKey.currentContext!,
-    ).loadString('lib/localization/arb/app_${locale.languageCode}.arb');
-
-    _localizedStrings = Map<String, String>.from(jsonDecode(json));
+    // For now, use hardcoded strings
+    _localizedStrings = {
+      'appTitle': 'Property Tax System',
+      'properties': 'Properties',
+      'ownership': 'Ownership',
+      'login': 'Login',
+      'logout': 'Logout',
+    };
     return true;
   }
 
   String translate(String key) {
-    return _localizedStrings![key] ?? key;
+    // Return key if translation not found
+    return _localizedStrings?[key] ?? key;
   }
 }
 
@@ -42,9 +45,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return AppLocalizations.supportedLocales.any(
-      (l) => l.languageCode == locale.languageCode,
-    );
+    return ['en', 'sw'].contains(locale.languageCode);
   }
 
   @override
@@ -56,11 +57,4 @@ class _AppLocalizationsDelegate
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
-}
-
-// Helper extension for easy access
-extension LocalizationExtension on BuildContext {
-  String tr(String key) {
-    return AppLocalizations.of(this).translate(key);
-  }
 }

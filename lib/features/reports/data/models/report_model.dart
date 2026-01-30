@@ -8,6 +8,23 @@ part 'report_model.g.dart';
 @HiveType(typeId: 5)
 @JsonSerializable()
 class ReportModel {
+  ReportModel({
+    required this.id,
+    required this.title,
+    required this.type,
+    required this.format,
+    required this.status,
+    this.dateRange,
+    required this.parameters,
+    this.fileUrl,
+    this.fileSize,
+    required this.createdAt,
+    this.completedAt,
+    this.downloadCount = 0,
+  });
+
+  factory ReportModel.fromJson(Map<String, dynamic> json) =>
+      _$ReportModelFromJson(json);
   @HiveField(0)
   @JsonKey(name: 'id')
   final String id;
@@ -34,7 +51,7 @@ class ReportModel {
 
   @HiveField(6)
   @JsonKey(name: 'parameters')
-  final Map<String, dynamic> parameters;
+  final Map<String, String> parameters;
 
   @HiveField(7)
   @JsonKey(name: 'file_url')
@@ -56,31 +73,14 @@ class ReportModel {
   @JsonKey(name: 'download_count')
   final int downloadCount;
 
-  ReportModel({
-    required this.id,
-    required this.title,
-    required this.type,
-    required this.format,
-    required this.status,
-    this.dateRange,
-    required this.parameters,
-    this.fileUrl,
-    this.fileSize,
-    required this.createdAt,
-    this.completedAt,
-    this.downloadCount = 0,
-  });
-
-  factory ReportModel.fromJson(Map<String, dynamic> json) =>
-      _$ReportModelFromJson(json);
-
   Map<String, dynamic> toJson() => _$ReportModelToJson(this);
 
   String get fileSizeFormatted {
     if (fileSize == null) return 'Unknown';
-    if (fileSize! < 1024) return '${fileSize} B';
-    if (fileSize! < 1024 * 1024)
+    if (fileSize! < 1024) return '$fileSize B';
+    if (fileSize! < 1024 * 1024) {
       return '${(fileSize! / 1024).toStringAsFixed(1)} KB';
+    }
     return '${(fileSize! / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
@@ -93,6 +93,12 @@ class ReportModel {
 @HiveType(typeId: 6)
 @JsonSerializable()
 class DateRange {
+  DateRange({required this.startDate, required this.endDate});
+
+  factory DateRange.fromJson(Map<String, dynamic> json) =>
+      _$DateRangeFromJson(json);
+  Map<String, dynamic> toJson() => _$DateRangeToJson(this);
+
   @HiveField(0)
   @JsonKey(name: 'start_date')
   final DateTime startDate;
@@ -100,13 +106,6 @@ class DateRange {
   @HiveField(1)
   @JsonKey(name: 'end_date')
   final DateTime endDate;
-
-  DateRange({required this.startDate, required this.endDate});
-
-  factory DateRange.fromJson(Map<String, dynamic> json) =>
-      _$DateRangeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DateRangeToJson(this);
 
   String get formattedRange =>
       '${_formatDate(startDate)} - ${_formatDate(endDate)}';
@@ -200,6 +199,17 @@ enum ReportStatus {
 @HiveType(typeId: 10)
 @JsonSerializable()
 class ReportData {
+  ReportData({
+    required this.totalProperties,
+    required this.totalTaxCollected,
+    required this.totalTaxDue,
+    required this.wardDistribution,
+    required this.propertyTypeDistribution,
+    required this.topProperties,
+  });
+
+  factory ReportData.fromJson(Map<String, dynamic> json) =>
+      _$ReportDataFromJson(json);
   @HiveField(0)
   @JsonKey(name: 'total_properties')
   final int totalProperties;
@@ -214,7 +224,7 @@ class ReportData {
 
   @HiveField(3)
   @JsonKey(name: 'ward_distribution')
-  final Map<String, WardData> wardDistribution;
+  final List<WardData> wardDistribution;
 
   @HiveField(4)
   @JsonKey(name: 'property_type_distribution')
@@ -224,24 +234,22 @@ class ReportData {
   @JsonKey(name: 'top_properties')
   final List<PropertySummary> topProperties;
 
-  ReportData({
-    required this.totalProperties,
-    required this.totalTaxCollected,
-    required this.totalTaxDue,
-    required this.wardDistribution,
-    required this.propertyTypeDistribution,
-    required this.topProperties,
-  });
-
-  factory ReportData.fromJson(Map<String, dynamic> json) =>
-      _$ReportDataFromJson(json);
-
   Map<String, dynamic> toJson() => _$ReportDataToJson(this);
 }
 
 @HiveType(typeId: 11)
 @JsonSerializable()
 class WardData {
+  WardData({
+    required this.wardName,
+    required this.propertyCount,
+    required this.totalValuation,
+    required this.totalTax,
+    required this.taxCollected,
+  });
+
+  factory WardData.fromJson(Map<String, dynamic> json) =>
+      _$WardDataFromJson(json);
   @HiveField(0)
   @JsonKey(name: 'ward_name')
   final String wardName;
@@ -262,23 +270,23 @@ class WardData {
   @JsonKey(name: 'tax_collected')
   final double taxCollected;
 
-  WardData({
-    required this.wardName,
-    required this.propertyCount,
-    required this.totalValuation,
-    required this.totalTax,
-    required this.taxCollected,
-  });
-
-  factory WardData.fromJson(Map<String, dynamic> json) =>
-      _$WardDataFromJson(json);
-
   Map<String, dynamic> toJson() => _$WardDataToJson(this);
 }
 
 @HiveType(typeId: 12)
 @JsonSerializable()
 class PropertySummary {
+  PropertySummary({
+    required this.propertyId,
+    required this.address,
+    required this.ward,
+    required this.currentValuation,
+    required this.annualTax,
+    required this.taxPaid,
+  });
+
+  factory PropertySummary.fromJson(Map<String, dynamic> json) =>
+      _$PropertySummaryFromJson(json);
   @HiveField(0)
   @JsonKey(name: 'property_id')
   final String propertyId;
@@ -302,18 +310,6 @@ class PropertySummary {
   @HiveField(5)
   @JsonKey(name: 'tax_paid')
   final double taxPaid;
-
-  PropertySummary({
-    required this.propertyId,
-    required this.address,
-    required this.ward,
-    required this.currentValuation,
-    required this.annualTax,
-    required this.taxPaid,
-  });
-
-  factory PropertySummary.fromJson(Map<String, dynamic> json) =>
-      _$PropertySummaryFromJson(json);
 
   Map<String, dynamic> toJson() => _$PropertySummaryToJson(this);
 }

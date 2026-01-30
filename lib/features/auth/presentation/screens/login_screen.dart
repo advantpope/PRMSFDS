@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         .login(
                           _emailController.text.trim(),
                           _passwordController.text.trim(),
-                          selectedUserType,
+                          // selectedUserType,
                         );
                   } catch (e) {
                     // Error is handled in the provider

@@ -1,170 +1,65 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:property_tax_system_fd/features/auth/data/datasources/auth_api.dart';
-import 'package:property_tax_system_fd/features/auth/data/models/register_request.dart';
-import 'package:property_tax_system_fd/features/auth/data/models/user_model.dart';
-import 'package:property_tax_system_fd/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:property_tax_system_fd/features/auth/domain/repositories/auth_repository.dart';
-import 'package:property_tax_system_fd/shared/services/storage_service.dart';
 
-// Providers
-final authApiProvider = Provider<AuthApi>((ref) {
-  return AuthApi();
-});
-
-final storageServiceProvider = Provider<StorageService>((ref) {
-  return StorageService();
-});
-
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImpl(
-    authApi: ref.read(authApiProvider),
-    storageService: ref.read(storageServiceProvider),
-  );
-});
-
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(ref.read(authRepositoryProvider)),
-);
-
-// Auth State
+// Simple auth state
 class AuthState {
-  final UserModel? user;
-  final bool isAuthenticated;
-  final bool isLoading;
-  final String? error;
-
   const AuthState({
-    this.user,
-    this.isAuthenticated = false,
     this.isLoading = false,
+    this.isAuthenticated = false,
     this.error,
+    this.user,
   });
+  final bool isLoading;
+  final bool isAuthenticated;
+  final String? error;
+  final Map<String, dynamic>? user;
 
   AuthState copyWith({
-    UserModel? user,
-    bool? isAuthenticated,
     bool? isLoading,
+    bool? isAuthenticated,
     String? error,
+    Map<String, dynamic>? user,
   }) {
     return AuthState(
-      user: user ?? this.user,
-      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      error: error,
+      user: user ?? this.user,
+    );
+  }
+}
+
+// Simple auth provider
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+  (ref) => AuthNotifier(),
+);
+
+class AuthNotifier extends StateNotifier<AuthState> {
+  AuthNotifier() : super(const AuthState(isLoading: true)) {
+    // Initialize auth state
+    Future.delayed(const Duration(seconds: 1), () {
+      state = const AuthState(isAuthenticated: false);
+    });
+  }
+
+  Future<void> login(String username, String password) async {
+    state = state.copyWith(isLoading: true);
+    // Simulate login
+    await Future.delayed(const Duration(seconds: 2));
+    state = state.copyWith(
+      isLoading: false,
+      isAuthenticated: true,
+      user: {
+        'id': 1,
+        'username': username,
+        'firstName': 'Admin',
+        'lastName': 'User',
+        'isAdmin': true,
+      },
     );
   }
 
-  bool get isAdmin => user?.isAdmin ?? false;
-}
-
-// Auth Notifier
-class AuthNotifier extends StateNotifier<AuthState> {
-  final AuthRepository _authRepository;
-
-  AuthNotifier(this._authRepository) : super(const AuthState()) {
-    checkAuthStatus();
-  }
-
-  Future<void> checkAuthStatus() async {
-    try {
-      state = state.copyWith(isLoading: true);
-
-      final isLoggedIn = await _authRepository.isLoggedIn();
-      if (isLoggedIn) {
-        final user = await _authRepository.getCurrentUser();
-        state = state.copyWith(user: user, isLoading: false);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Failed to check auth status',
-      );
-    }
-  }
-
-  Future<void> login(String email, String password, String userType) async {
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (email == 'admin@gov.com' &&
-          password == 'password' &&
-          userType == 'admin') {
-        state = state.copyWith(isAuthenticated: true, isLoading: false);
-      } else {
-        throw Exception('Invalid credentials');
-      }
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  Future<void> register({
-    required String username,
-    required String email,
-    required String password,
-    required String confirmPassword,
-    required String firstName,
-    required String lastName,
-  }) async {
-    try {
-      state = state.copyWith(isLoading: true, error: null);
-
-      final request = RegisterRequest(
-        username: username,
-        email: email,
-        password1: password,
-        password2: confirmPassword,
-        firstName: firstName,
-        lastName: lastName,
-      );
-
-      final response = await _authRepository.register(request);
-      state = state.copyWith(user: response.user, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> logout() async {
-    try {
-      state = state.copyWith(isLoading: true);
-      await _authRepository.logout();
-      state = const AuthState(isLoading: false);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Logout failed');
-    }
-  }
-
-  Future<void> resetPassword(String email) async {
-    try {
-      state = state.copyWith(isLoading: true, error: null);
-      await _authRepository.resetPassword(email);
-      state = state.copyWith(isLoading: false);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-      rethrow;
-    }
-  }
-
-  void clearError() {
-    state = state.copyWith(error: null);
+  void logout() {
+    state = const AuthState(isAuthenticated: false);
   }
 }
-
-// Helper provider to check if user is authenticated
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authProvider);
-  return authState.isAuthenticated;
-});
-
-// Helper provider to get current user
-final currentUserProvider = Provider<UserModel?>((ref) {
-  final authState = ref.watch(authProvider);
-  return authState.user;
-});
