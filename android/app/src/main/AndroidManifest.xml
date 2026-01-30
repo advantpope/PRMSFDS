@@ -29,7 +29,7 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyCy0eIgYfFtoRD64q-RUrcmZu_YKwMOw5c"
+                android:value="Google Maps API key here"
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
